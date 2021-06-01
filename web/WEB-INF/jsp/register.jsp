@@ -13,8 +13,8 @@
 <body>
     <form>
         <input type="hidden" name="command" value="savenewuser">
-        login: <br/> <input type="text" name="login" value=""> <br/>
-        password: <br/> <input type="text" name="password" value=""> <br/>
+        login: <br/> <input type="email" name="login" value="" placeholder="kotik@example.com"> <br/>
+        password: <br/> <input type="password" name="password" value=""> <br/>
 
         <input type="submit" value="Register">
     </form>
