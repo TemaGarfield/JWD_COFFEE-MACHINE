@@ -1,15 +1,11 @@
 package by.kotik.controller.command.impl;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import by.kotik.bean.User;
 import by.kotik.controller.command.Command;
-import by.kotik.dao.ConnectionProvider;
-import by.kotik.dao.UserDatabase;
 import by.kotik.service.ServiceException;
 import by.kotik.service.ServiceProvider;
 import by.kotik.service.UserService;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

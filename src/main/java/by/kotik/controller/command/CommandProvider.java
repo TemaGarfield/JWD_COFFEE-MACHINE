@@ -17,7 +17,10 @@ public class CommandProvider {
         commands.put(CommandName.GOTOWELCOMEPAGE, new GoToWelcomePage());
         commands.put(CommandName.LOGOUT, new Logout());
         commands.put(CommandName.GOTOADMINPAGE, new GoToAdminPage());
-        commands.put(CommandName.ADMINISTRATION, new Administration());
+        commands.put(CommandName.SAVENEWCOFFEE, new SaveNewCoffee());
+        commands.put(CommandName.DELETECOFFEE, new DeleteCoffee());
+        commands.put(CommandName.EDITCOFFEE, new EditCoffee());
+        commands.put(CommandName.GOTOEDITCOFFEE, new GoToEditCoffee());
     }
 
     public Command takeCommand(String name) {

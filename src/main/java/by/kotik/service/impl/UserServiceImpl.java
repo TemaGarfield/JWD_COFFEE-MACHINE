@@ -25,7 +25,6 @@ public class UserServiceImpl implements UserService {
             BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
 
             if (result.verified) {
-                System.out.println(user.getClass());
                 return user;
             } else {
                 return null;

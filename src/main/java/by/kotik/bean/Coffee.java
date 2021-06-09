@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Coffee {
+    private int id;
     private String type;
     private BigDecimal cost;
     private int amount;
@@ -12,10 +13,21 @@ public class Coffee {
 
     }
 
+    public Coffee(int id, String type, BigDecimal cost, int amount) {
+        this.id = id;
+        this.type = type;
+        this.cost = cost;
+        this.amount = amount;
+    }
+
     public Coffee(String type, BigDecimal cost, int amount) {
         this.type = type;
         this.cost = cost;
         this.amount = amount;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getType() {

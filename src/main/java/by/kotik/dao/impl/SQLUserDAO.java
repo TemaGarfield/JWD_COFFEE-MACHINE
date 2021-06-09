@@ -3,6 +3,7 @@ package by.kotik.dao.impl;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import by.kotik.bean.Admin;
 import by.kotik.bean.User;
+import by.kotik.dao.ConnectionProvider;
 import by.kotik.dao.DAOException;
 import by.kotik.dao.UserDAO;
 
@@ -11,9 +12,14 @@ import java.sql.*;
 import java.util.List;
 
 public class SQLUserDAO implements UserDAO {
-    private final String PATH = "jdbc:mysql://localhost:3306/coffee-machine";
-    private final String USERNAME = "root";
-    private final String PASSWORD = "KotikPa55word";
+    private final String USER_USERNAME = "username";
+    private final String USER_PASSWORD = "password";
+    private final String USER_BALANCE = "balance";
+    private final String USER_IS_ADMIN = "is_admin";
+
+    private final String AUTHORIZATION_QUERY = "select * from user where username=?";
+    private final String REGISTRATION_QUERY = "insert into user(username, password, balance, is_admin) values(?, ?, ?, ?)";
+
     static {
         MYSQLDriverLoader.getInstance();
     }
@@ -21,14 +27,14 @@ public class SQLUserDAO implements UserDAO {
     @Override
     public User authorization(String login, String password) throws DAOException{
         Connection connection = null;
-        Statement statement = null;
+        PreparedStatement statement = null;
         ResultSet resultSet = null;
 
         try {
-            String query = "select * from user where username='" + login + "'";
-            connection = DriverManager.getConnection(PATH, USERNAME, PASSWORD);
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            connection = ConnectionProvider.getConnection();
+            statement = connection.prepareStatement(AUTHORIZATION_QUERY);
+            statement.setString(1, login);
+            resultSet = statement.executeQuery();
 
             String username = "";
             String userPassword = "";
@@ -36,15 +42,11 @@ public class SQLUserDAO implements UserDAO {
             boolean isAdmin = false;
 
             while (resultSet.next()) {
-                username = resultSet.getString("username");
-                userPassword = resultSet.getString("password");
-                balance = resultSet.getBigDecimal("balance");
-                isAdmin = resultSet.getBoolean("is_admin");
+                username = resultSet.getString(USER_USERNAME);
+                userPassword = resultSet.getString(USER_PASSWORD);
+                balance = resultSet.getBigDecimal(USER_BALANCE);
+                isAdmin = resultSet.getBoolean(USER_IS_ADMIN);
             }
-
-            resultSet.close();
-
-
 
             if (isAdmin) {
                 Admin admin = new Admin(username, userPassword, balance);
@@ -60,6 +62,8 @@ public class SQLUserDAO implements UserDAO {
         } finally {
             try {
                 connection.close();
+                statement.close();
+                resultSet.close();
             } catch (SQLException e) {
                 throw new DAOException(e);
             }
@@ -71,13 +75,12 @@ public class SQLUserDAO implements UserDAO {
     public boolean registration(User user) throws DAOException {
         Connection connection = null;
         try {
-            String query = "insert into user(username, password, balance, is_admin) values(?, ?, ?, ?)";
-            connection = DriverManager.getConnection(PATH, USERNAME, PASSWORD);
+            connection = ConnectionProvider.getConnection();
 
             String hashPassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
             user.setPassword(hashPassword);
 
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            PreparedStatement preparedStatement = connection.prepareStatement(REGISTRATION_QUERY);
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setDouble(3, user.getBalance().doubleValue());
@@ -87,7 +90,6 @@ public class SQLUserDAO implements UserDAO {
 
             return true;
         } catch (SQLException e) {
-            System.out.println("DAO!");
             throw new DAOException(e);
         } finally {
             try {

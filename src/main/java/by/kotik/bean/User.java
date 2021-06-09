@@ -1,6 +1,7 @@
 package by.kotik.bean;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class User {
     private String username;
@@ -47,5 +48,18 @@ public class User {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return isAdmin == user.isAdmin && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(balance, user.balance);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, password, balance, isAdmin);
     }
 }
