@@ -14,7 +14,6 @@ public class DeleteCoffee implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        //System.out.println(id);
 
         ServiceProvider provider = ServiceProvider.getInstance();
         CoffeeService coffeeService = provider.getCoffeeService();

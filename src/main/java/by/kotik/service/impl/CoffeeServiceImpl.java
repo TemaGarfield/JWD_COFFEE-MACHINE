@@ -12,7 +12,7 @@ import java.util.List;
 public class CoffeeServiceImpl implements CoffeeService {
     @Override
     public List<Coffee> all() throws ServiceException {
-        DAOProvider provider =DAOProvider.getInstance();
+        DAOProvider provider = DAOProvider.getInstance();
         CoffeeDAO coffeeDAO = provider.getCoffeeDAO();
 
         List<Coffee> coffeeList;

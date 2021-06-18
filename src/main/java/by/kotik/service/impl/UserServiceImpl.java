@@ -1,11 +1,11 @@
 package by.kotik.service.impl;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import by.kotik.bean.Admin;
 import by.kotik.bean.User;
 import by.kotik.dao.DAOException;
 import by.kotik.dao.DAOProvider;
 import by.kotik.dao.UserDAO;
+import by.kotik.dao.connectionpool.ConnectionPollException;
 import by.kotik.service.ServiceException;
 import by.kotik.service.UserService;
 
@@ -31,6 +31,8 @@ public class UserServiceImpl implements UserService {
             }
         } catch (DAOException e) {
             throw new ServiceException("Authorization exception", e);
+        } catch (ConnectionPollException e) {
+            throw new ServiceException("Authorization exception", e);
         }
     }
 
@@ -43,6 +45,8 @@ public class UserServiceImpl implements UserService {
             userDAO.registration(user);
             return true;
         } catch (DAOException e) {
+            throw new ServiceException("Registration exception", e);
+        } catch (ConnectionPollException e) {
             throw new ServiceException("Registration exception", e);
         }
     }

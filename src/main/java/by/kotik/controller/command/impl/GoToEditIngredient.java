@@ -1,8 +1,8 @@
 package by.kotik.controller.command.impl;
 
-import by.kotik.bean.Coffee;
+import by.kotik.bean.Ingredient;
 import by.kotik.controller.command.Command;
-import by.kotik.service.CoffeeService;
+import by.kotik.service.IngredientService;
 import by.kotik.service.ServiceException;
 import by.kotik.service.ServiceProvider;
 
@@ -12,21 +12,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class GoToEditCoffee implements Command {
+public class GoToEditIngredient implements Command {
+    private final String INGREDIENT_ID = "id";
+    private final String PATH = "/WEB-INF/jsp/edit-ingredient.jsp";
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter(INGREDIENT_ID));
 
         ServiceProvider provider = ServiceProvider.getInstance();
-        CoffeeService service = provider.getCoffeeService();
+        IngredientService service = provider.getIngredientService();
+
         try {
-            Coffee existingCoffee = service.getCoffeeById(id);
-            request.setAttribute("coffee", existingCoffee);
+            Ingredient existingIngredient = service.getIngredientById(id);
+            request.setAttribute("ingredient", existingIngredient);
         } catch (ServiceException e) {
             response.sendRedirect("error.jsp");
         }
 
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/jsp/edit-coffee.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher(PATH);
         requestDispatcher.forward(request, response);
     }
 }

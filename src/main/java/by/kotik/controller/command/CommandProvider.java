@@ -20,7 +20,11 @@ public class CommandProvider {
         commands.put(CommandName.SAVENEWCOFFEE, new SaveNewCoffee());
         commands.put(CommandName.DELETECOFFEE, new DeleteCoffee());
         commands.put(CommandName.EDITCOFFEE, new EditCoffee());
-        commands.put(CommandName.GOTOEDITCOFFEE, new GoToEditCoffee());
+        commands.put(CommandName.GOTOEDITCOFFEEPAGE, new GoToEditCoffee());
+        commands.put(CommandName.SAVENEWINGREDIENT, new SaveNewIngredient());
+        commands.put(CommandName.DELETEINGREDIENT, new DeleteIngredient());
+        commands.put(CommandName.EDITINGREDIENT, new EditIngredient());
+        commands.put(CommandName.GOTOEDITINGREDIENT, new GoToEditIngredient());
     }
 
     public Command takeCommand(String name) {

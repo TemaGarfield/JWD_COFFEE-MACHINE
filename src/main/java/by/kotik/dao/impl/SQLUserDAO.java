@@ -6,12 +6,16 @@ import by.kotik.bean.User;
 import by.kotik.dao.ConnectionProvider;
 import by.kotik.dao.DAOException;
 import by.kotik.dao.UserDAO;
+import by.kotik.dao.connectionpool.ConnectionPool;
+import by.kotik.dao.connectionpool.ConnectionPollException;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.List;
 
 public class SQLUserDAO implements UserDAO {
+    private static final Logger logger = Logger.getLogger(SQLUserDAO.class);
+
     private final String USER_USERNAME = "username";
     private final String USER_PASSWORD = "password";
     private final String USER_BALANCE = "balance";
@@ -20,18 +24,17 @@ public class SQLUserDAO implements UserDAO {
     private final String AUTHORIZATION_QUERY = "select * from user where username=?";
     private final String REGISTRATION_QUERY = "insert into user(username, password, balance, is_admin) values(?, ?, ?, ?)";
 
-    static {
-        MYSQLDriverLoader.getInstance();
-    }
 
     @Override
-    public User authorization(String login, String password) throws DAOException{
+    public User authorization(String login, String password) throws DAOException, ConnectionPollException{
+        ConnectionPool connectionPool = null;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
 
         try {
-            connection = ConnectionProvider.getConnection();
+            connectionPool = ConnectionPool.getInstance();
+            connection = connectionPool.takeConnection();
             statement = connection.prepareStatement(AUTHORIZATION_QUERY);
             statement.setString(1, login);
             resultSet = statement.executeQuery();
@@ -59,23 +62,22 @@ public class SQLUserDAO implements UserDAO {
 
         } catch (SQLException e) {
             throw new DAOException(e);
-        } finally {
-            try {
-                connection.close();
-                statement.close();
-                resultSet.close();
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
+        } catch (ConnectionPollException e) {
+            throw new ConnectionPollException(e);
+        }
+        finally {
+            connectionPool.closeConnection(connection, statement, resultSet);
         }
 
     }
 
     @Override
-    public boolean registration(User user) throws DAOException {
+    public boolean registration(User user) throws DAOException, ConnectionPollException {
+        ConnectionPool connectionPool = null;
         Connection connection = null;
         try {
-            connection = ConnectionProvider.getConnection();
+            connectionPool = ConnectionPool.getInstance();
+            connection = connectionPool.takeConnection();
 
             String hashPassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
             user.setPassword(hashPassword);
@@ -91,12 +93,10 @@ public class SQLUserDAO implements UserDAO {
             return true;
         } catch (SQLException e) {
             throw new DAOException(e);
+        } catch (ConnectionPollException e) {
+            throw new ConnectionPollException(e);
         } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new DAOException(e);
-            }
+            connectionPool.closeConnection(connection);
         }
     }
 }

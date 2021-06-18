@@ -4,41 +4,33 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class Coffee implements Serializable {
-    private int id;
-    private String type;
+public class Ingredient implements Serializable {
+    private int idIngredient;
     private BigDecimal cost;
+    private String type;
     private int amount;
 
-    public Coffee() {
+    public Ingredient() {}
 
-    }
-
-    public Coffee(int id, String type, BigDecimal cost, int amount) {
-        this.id = id;
-        this.type = type;
+    public Ingredient(BigDecimal cost, String type, int amount) {
         this.cost = cost;
+        this.type = type;
         this.amount = amount;
     }
 
-    public Coffee(String type, BigDecimal cost, int amount) {
-        this.type = type;
+    public Ingredient(int idIngredient, BigDecimal cost, String type, int amount) {
+        this.idIngredient = idIngredient;
         this.cost = cost;
+        this.type = type;
         this.amount = amount;
     }
 
     public int getId() {
-        return id;
+        return idIngredient;
     }
 
-    public void setId(int id) { this.id = id; }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setId(int idIngredient) {
+        this.idIngredient = idIngredient;
     }
 
     public BigDecimal getCost() {
@@ -47,6 +39,14 @@ public class Coffee implements Serializable {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getAmount() {
@@ -61,21 +61,21 @@ public class Coffee implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Coffee coffee = (Coffee) o;
-        return id == coffee.id && amount == coffee.amount && Objects.equals(type, coffee.type) && Objects.equals(cost, coffee.cost);
+        Ingredient that = (Ingredient) o;
+        return idIngredient == that.idIngredient && amount == that.amount && Objects.equals(cost, that.cost) && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, cost, amount);
+        return Objects.hash(idIngredient, cost, type, amount);
     }
 
     @Override
     public String toString() {
-        return "Coffee{" +
-                "id=" + id +
-                ", type='" + type + '\'' +
+        return "Ingredient{" +
+                "idIngredient=" + idIngredient +
                 ", cost=" + cost +
+                ", type='" + type + '\'' +
                 ", amount=" + amount +
                 '}';
     }

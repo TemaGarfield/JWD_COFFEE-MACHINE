@@ -1,8 +1,9 @@
 package by.kotik.bean;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Admin extends User{
+public class Admin extends User implements Serializable {
     public Admin() {
         super();
         this.setAdmin(true);

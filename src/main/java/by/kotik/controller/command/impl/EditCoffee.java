@@ -15,11 +15,12 @@ import java.math.BigDecimal;
 public class EditCoffee implements Command {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
         String type = request.getParameter("type");
         BigDecimal cost = new BigDecimal(request.getParameter("cost"));
         int amount = Integer.valueOf(request.getParameter("amount"));
 
-        Coffee coffee = new Coffee(type, cost, amount);
+        Coffee coffee = new Coffee(id, type, cost, amount);
 
         ServiceProvider provider = ServiceProvider.getInstance();
         CoffeeService service = provider.getCoffeeService();
@@ -30,7 +31,5 @@ public class EditCoffee implements Command {
         } catch (ServiceException e) {
             response.sendRedirect("error.jsp");
         }
-
-
     }
 }

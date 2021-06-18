@@ -1,9 +1,10 @@
 package by.kotik.bean;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
     private String username;
     private String password;
     private BigDecimal balance;
@@ -61,5 +62,15 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(username, password, balance, isAdmin);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", balance=" + balance +
+                ", isAdmin=" + isAdmin +
+                '}';
     }
 }
